@@ -60,7 +60,7 @@ public class ArcheryListener extends MMOObject  {
 				Vector3d v = e.getTargetEntity().getVelocity();
 				for (int i = 0; i < 9; i++) {
 					a.offer(Keys.VELOCITY, v.add(0.05 - (Math.random()*0.1), 0.05 - (Math.random()*0.1), 0.05 - (Math.random()*0.1)));
-					a.apply(e.getTargetEntity().getLocation(), ServerUtils.getSpawnCause(e.getTargetEntity()));
+					a.apply(e.getTargetEntity().getLocation());
 				}
 			}
 		}

@@ -9,7 +9,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.cause.entity.spawn.BlockSpawnCause;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
@@ -58,7 +57,7 @@ public class DoubleDropManager {
 
 	@Listener(order = Order.LATE)
 	@IsCancelled(value = Tristate.FALSE)
-	public void onItemDrop(final DropItemEvent.Destruct e, @First final BlockSpawnCause block) {
+	public void onItemDrop(final DropItemEvent.Destruct e) { //, @First final BlockSpawnCause block) {
 		e.getEntities().stream().filter(ent -> ent instanceof Item).map(ent -> (Item)ent).forEach(item -> {
 			Optional.ofNullable(this.blocks.get(item.getWorld()).get(item.getLocation().getBlockPosition())).ifPresent(times -> {
 				ItemStack is = item.item().get().createStack();

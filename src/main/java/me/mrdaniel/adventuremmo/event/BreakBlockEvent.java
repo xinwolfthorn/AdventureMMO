@@ -5,6 +5,8 @@ import javax.annotation.Nullable;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.impl.AbstractEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -28,7 +30,7 @@ public class BreakBlockEvent extends AbstractEvent {
 		this.block = block;
 		this.tool = tool;
 
-		this.cause = Cause.source(mmo.getContainer()).build();
+		this.cause = Cause.builder().build(EventContext.builder().add(EventContextKeys.PLUGIN, mmo.getContainer()).build());
 	}
 
 	@Nonnull

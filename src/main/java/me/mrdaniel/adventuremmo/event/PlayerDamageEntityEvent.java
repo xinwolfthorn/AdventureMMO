@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
 import me.mrdaniel.adventuremmo.AdventureMMO;
@@ -26,7 +28,7 @@ public class PlayerDamageEntityEvent extends AbstractEvent {
 		this.damage = damage;
 		this.death = death;
 
-		this.cause = Cause.source(mmo.getContainer()).build();
+		this.cause = Cause.builder().build(EventContext.builder().add(EventContextKeys.PLUGIN, mmo.getContainer()).build());
 	}
 
 	@Nonnull

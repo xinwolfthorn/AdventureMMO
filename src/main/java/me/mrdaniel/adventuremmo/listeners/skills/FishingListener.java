@@ -11,6 +11,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.action.FishingEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -58,23 +59,21 @@ public class FishingListener extends ActiveAbilityListener {
 
 	@Listener(order = Order.LATE)
 	@IsCancelled(value = Tristate.FALSE)
-	public void onFish(final FishingEvent.Stop e) {
-		if (e.getTargetEntity() instanceof Player) {
-			Player p = (Player) e.getTargetEntity();
-			e.getItemStackTransaction().forEach(trans -> {
-				PlayerData pdata = super.getMMO().getPlayerDatabase().addExp(super.getMMO(), p, super.skill, this.fish_exp);
-				final int level = pdata.getLevel(super.skill);
+	public void onFish(final FishingEvent.Stop e, @First Player p) {
+		e.getItemStackTransaction().forEach(trans -> {
+			PlayerData pdata = super.getMMO().getPlayerDatabase().addExp(super.getMMO(), p, super.skill, this.fish_exp);
+			final int level = pdata.getLevel(super.skill);
 
-				ItemStack item = trans.getFinal().createStack();
-				if (Abilities.WATER_TREASURE.getChance(level)) { item = this.getDrop(level); }
-				else {
-					if (this.replace_default_loot && item.getItem() != ItemTypes.FISH) { item = ItemStack.builder().itemType(ItemTypes.FISH).build(); }
-					if (Abilities.DOUBLE_DROP.getChance(level)) { item.setQuantity(item.getQuantity()*2); }
-				}
-				trans.setCustom(item.createSnapshot());
-			});
-		}
+			ItemStack item = trans.getFinal().createStack();
+			if (Abilities.WATER_TREASURE.getChance(level)) { item = this.getDrop(level); }
+			else {
+				if (this.replace_default_loot && item.getItem() != ItemTypes.FISH) { item = ItemStack.builder().itemType(ItemTypes.FISH).build(); }
+				if (Abilities.DOUBLE_DROP.getChance(level)) { item.setQuantity(item.getQuantity()*2); }
+			}
+			trans.setCustom(item.createSnapshot());
+		});
 	}
+
 
 	@Nonnull
 	private ItemStack getDrop(final int level) {
@@ -82,6 +81,6 @@ public class FishingListener extends ActiveAbilityListener {
 			int l = this.levels.get(i);
 			if (level >= l && this.drops.get(l).getFirst() > Math.random()*100) { return this.drops.get(l).getSecond().create(super.getMMO()); }
 		}
-		return ItemUtils.build(ItemTypes.DYE, (int) Math.random() * 11 + 10, 4);
+		return ItemUtils.build(ItemTypes.DYE, (int) (Math.random() * 11) + 10, 4);
 	}
 }

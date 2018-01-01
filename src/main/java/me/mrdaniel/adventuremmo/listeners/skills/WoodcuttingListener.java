@@ -7,13 +7,10 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.data.type.TreeTypes;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.Tristate;
-import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -50,7 +47,7 @@ public class WoodcuttingListener extends ActiveAbilityListener {
 						super.getMMO().getItemDatabase().getData(newloc.getBlockType()).ifPresent(blockdata -> {
 							if (blockdata.getSkill() == this.skill) {
 								ItemStackSnapshot item = ItemUtils.build(newloc.getBlockType().getItem().get(), Abilities.DOUBLE_DROP.getChance(pdata.getLevel(super.skill)) ? 1 : 2, this.matchTree(newloc.getBlock().get(Keys.TREE_TYPE).orElse(TreeTypes.OAK))).createSnapshot();
-								newloc.setBlockType(BlockTypes.AIR, BlockChangeFlag.ALL, Cause.source(super.getMMO().getContainer()).named(NamedCause.simulated(e.getPlayer())).build());
+								newloc.setBlockType(BlockTypes.AIR);
 								ItemUtils.drop(newloc, item);
 								super.getGame().getEventManager().post(new BreakBlockEvent(super.getMMO(), e.getPlayer(), newloc, blockdata, this.tool));
 							}
